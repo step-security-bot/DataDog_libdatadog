@@ -2,6 +2,9 @@ name: Miri test
 on:
   push:
 
+permissions:
+  contents: read
+
 jobs:
   run-miri:
     runs-on: ubuntu-latest
@@ -12,6 +15,11 @@ jobs:
       CARGO_TERM_COLOR: always
       PROPTEST_CASES: 1
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
       - name: Set up Rust
         run: |

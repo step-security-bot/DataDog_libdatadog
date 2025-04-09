@@ -4,6 +4,9 @@ on:
     paths:
       - 'ruby/**' # Only run action when ruby-related things are touched
 
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
@@ -13,6 +16,11 @@ jobs:
         ruby: [2.1, 2.3, 2.4, 2.5, 2.6, 2.7, '3.0', 3.1, head]
     runs-on: ${{ matrix.os }}
     steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+      with:
+        egress-policy: audit
+
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
     - uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe # 1.226.0
       with:
@@ -34,6 +42,11 @@ jobs:
         ruby: [2.2]
     runs-on: ${{ matrix.os }}
     steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+      with:
+        egress-policy: audit
+
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
     - uses: ruby/setup-ruby@922ebc4c5262cd14e07bb0e1db020984b6c064fe # 1.226.0
       with:

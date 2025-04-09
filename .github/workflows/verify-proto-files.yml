@@ -7,6 +7,9 @@ env:
   DATADOG_AGENT_TAG: "7.55.0-rc.3"
   rust_version: "1.78.0"
 
+permissions:
+  contents: read
+
 jobs:
   verify-proto-files:
     name: "Verify trace-protobuf .proto files are in sync with datadog-agent"
@@ -14,6 +17,11 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
+
       - name: Checkout sources
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
       - name: diff agent_payload.proto
